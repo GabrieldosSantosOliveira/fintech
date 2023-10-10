@@ -1,4 +1,8 @@
+import 'package:fintech/ui/pages/onboarding/components/button.dart';
+import 'package:fintech/ui/pages/onboarding/components/dot.dart';
+import 'package:fintech/ui/pages/onboarding/slides.dart';
 import 'package:flutter/material.dart';
+import 'components/onboarding_content.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -8,84 +12,54 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
+  final controller = PageController();
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(35, 48, 59, 1),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Container(
-            width: size.width,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Transform.translate(
-                    offset: Offset(30.0, (size.height / 5) * -1),
-                    child: Transform.scale(
-                      scale: 1.5,
-                      child: Image.asset(
-                        "assets/images/onboarding/1/1.png",
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Transform.scale(
-                    scale: 2,
-                    child: Image.asset(
-                      "assets/images/onboarding/2/2.png",
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Transform.translate(
-                    offset: Offset(-30.0, (size.height / 5)),
-                    child: Transform.scale(
-                      scale: 1.5,
-                      child: Image.asset(
-                        "assets/images/onboarding/3/3.png",
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+      backgroundColor: const Color(0xFF23303B),
+      body: SafeArea(
+        child: Column(
+          children: [
+            PageView.builder(
+              itemCount: 2,
+              controller: controller,
+              itemBuilder: (context, index) => OnboardingContent(
+                image: slides[index].image,
+                title: slides[index].title,
+                subTitle: slides[index].subTitle,
+                text: slides[index].text,
+              ),
             ),
-          ),
-          Column(
-            children: [
-              const Text(
-                'Manage Your \nPayments with',
-                style: TextStyle(
-                  fontFamily: "SofiaPro",
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 35,
-                ),
+            Padding(
+              padding: const EdgeInsets.only(left: 34, right: 34, bottom: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: Row(
+                      children: [Dot(), SizedBox(width: 5), Dot(), Dot()],
+                    ),
+                  ),
+                  Button(
+                    onPressed: () {
+                      controller.nextPage(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.ease,
+                      );
+                    },
+                  )
+                ],
               ),
-              const Text(
-                'mobile banking',
-                style: TextStyle(
-                  fontFamily: "SofiaPro",
-                  color: Color.fromRGBO(69, 110, 254, 1),
-                  fontWeight: FontWeight.w400,
-                  fontSize: 35,
-                ),
-              ),
-              const Text(
-                'A convenient way to manage your money securely from mobile device.',
-                style: TextStyle(
-                  fontFamily: "SofiaPro",
-                  color: Color.fromRGBO(142, 148, 154, 1),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
